@@ -1,0 +1,66 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0e1a">
+  <title>لوحة المشرف | سؤال وجواب</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body data-phase="loading">
+  <div class="app">
+    <header class="topbar">
+      <div class="topbar-side">
+        <div class="logo-mini">؟</div>
+        <div class="room-chip">
+          <span class="label">رمز الجلسة</span>
+          <b id="roomCode">----</b>
+        </div>
+        <span class="conn-status" style="margin-inline-start:6px"><span class="dot" id="connDot"></span></span>
+      </div>
+      <div class="topbar-side">
+        <button class="icon-btn" id="soundBtn" aria-label="الصوت"></button>
+        <button class="btn btn-ghost btn-sm" id="endBtn">إنهاء</button>
+      </div>
+    </header>
+
+    <main class="host-main">
+      <section class="stage" id="stage"></section>
+      <aside class="sidebar" id="sidebar"></aside>
+    </main>
+  </div>
+
+  <div id="gateScreen" class="overlay hidden">
+    <div class="wheel-stage">
+      <div class="card" style="max-width:420px;text-align:center">
+        <h2 style="margin:0 0 8px">ليست لديك صلاحية الإدارة</h2>
+        <p class="muted" style="line-height:1.9">هذه اللوحة تخص من أنشأ الجلسة. اطلب رابطاً جديداً من المشرف، أو أنشئ جلسة خاصة بك.</p>
+        <a class="btn btn-primary btn-lg" style="text-decoration:none;display:inline-flex;margin-top:10px" href="/">إنشاء جلسة جديدة</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="wheelOverlay" class="overlay hidden">
+    <div class="wheel-stage">
+      <div class="wheel-title" id="wheelTitle">عجلة الحظ تدور...</div>
+      <div class="wheel-holder">
+        <div class="wheel-pointer"></div>
+        <canvas id="wheelCanvas"></canvas>
+      </div>
+      <div class="wheel-sub" id="wheelSub">سيتم اختيار لاعب للإجابة</div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/shared.js"></script>
+  <script src="/js/wheel.js"></script>
+  <script src="/js/host.js"></script>
+</body>
+</html>

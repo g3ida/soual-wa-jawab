@@ -1,0 +1,93 @@
+<!doctype html>
+<html dir="rtl" lang="ar">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="theme-color" content="#0a0e1a">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <title>سؤال وجواب</title>
+  <link rel="icon" href="/icon.svg" type="image/svg+xml">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="/css/styles.css">
+</head>
+<body>
+  <div class="app">
+    <div class="home-wrap">
+      <div class="home-card">
+        <div class="brand-logo">؟</div>
+        <h1>سؤال وجواب</h1>
+        <p class="sub">مسابقة جماعية سريعة: مشرف واحد وحتى ٦ لاعبين<br>الأسرع يضغط... والأذكى يفوز</p>
+
+        <button class="btn btn-primary btn-lg btn-block" id="createBtn">إنشاء جلسة جديدة</button>
+
+        <div class="divider">لديك رمز جلسة؟</div>
+
+        <form id="codeForm" class="link-box">
+          <input id="codeInput" class="input code-input" maxlength="4" placeholder="----" autocomplete="off" autocapitalize="characters" spellcheck="false" enterkeyhint="go">
+          <button class="btn btn-ghost" type="submit" id="joinCodeBtn">انضم</button>
+        </form>
+
+        <ul class="features">
+          <li>زر سرعة لكل لاعب على جواله</li>
+          <li>عجلة حظ لاختيار لاعب عشوائياً</li>
+          <li>لوحة نتائج بعد كل سؤال</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <div id="toast" class="toast hidden"></div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script src="/js/shared.js"></script>
+  <script>
+    'use strict';
+    (() => {
+      const socket = io();
+      const createBtn = SJ.$('#createBtn');
+      const codeInput = SJ.$('#codeInput');
+      const codeForm = SJ.$('#codeForm');
+
+      createBtn.addEventListener('click', () => {
+        createBtn.disabled = true;
+        createBtn.textContent = 'جارٍ إنشاء الجلسة...';
+        socket.emit('host:create', {}, (res) => {
+          if (res && res.ok) {
+            try {
+              localStorage.setItem(`sj-host-${res.code}`, res.hostToken);
+              if (res.lanUrls && res.lanUrls.length) {
+                localStorage.setItem(`sj-lan-${res.code}`, res.lanUrls[0]);
+              }
+            } catch (err) { /* ignore */ }
+            location.href = `/host/${res.code}`;
+          } else {
+            createBtn.disabled = false;
+            createBtn.textContent = 'إنشاء جلسة جديدة';
+            SJ.toast('تعذّر إنشاء الجلسة، حاول مرة أخرى');
+          }
+        });
+      });
+
+      codeInput.addEventListener('input', () => {
+        codeInput.value = codeInput.value
+          .toUpperCase()
+          .replace(/[^A-Z0-9]/g, '')
+          .slice(0, 4);
+      });
+
+      codeForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const code = codeInput.value.trim().toUpperCase();
+        if (code.length !== 4) {
+          SJ.toast('اكتب رمز الجلسة المكوّن من ٤ خانات');
+          return;
+        }
+        location.href = `/${code}`;
+      });
+    })();
+  </script>
+</body>
+</html>
