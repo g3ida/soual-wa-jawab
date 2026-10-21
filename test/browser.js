@@ -168,7 +168,7 @@ async function main() {
     check('انتهت العجلة وبدأ دور اللاعب المختار', true);
     await host.click('#wrongBtn');
     await host.waitForSelector('#nextBtn', { timeout: 5000 });
-    check('تسجيل إجابة خاطئة عبر العجلة → -5', true);
+    check('تسجيل إجابة خاطئة عبر العجلة → -10', true);
 
     /* ---------- السؤال الثالث: لا أحد يعرف ثم النهاية ---------- */
     await host.click('#nextBtn');

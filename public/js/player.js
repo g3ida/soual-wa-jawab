@@ -307,7 +307,7 @@
 
   function questionHTML(mine) {
     if (mine.locked) {
-      const d = state.deltas[mine.id] != null ? state.deltas[mine.id] : -20;
+      const d = state.deltas[mine.id] != null ? state.deltas[mine.id] : -10;
       return `
         <div class="card locked-card">
           <div class="xmark">×</div>
@@ -349,9 +349,8 @@
   }
 
   function turnHTML(mine) {
-    const mode = state.answerMode;
-    const pts = SJ.potentialPoints(state, mine.id, mode);
-    const tier = SJ.buzzTierLabel(state, mine.id, mode);
+    const pts = SJ.SCORE;
+    const tier = SJ.buzzTierLabel(state, mine.id, state.answerMode);
     return `
       <div class="chip gold" style="align-self:center">${SJ.esc(tier)}</div>
       ${questionCardHTML()}
@@ -366,7 +365,7 @@
 
   function otherTurnHTML(mine) {
     const who = state.players.find((p) => p.id === state.answererId);
-    const pts = SJ.potentialPoints(state, state.answererId, state.answerMode);
+    const pts = SJ.SCORE;
     return `
       ${questionCardHTML()}
       <div class="card other-turn">

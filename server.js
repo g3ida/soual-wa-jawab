@@ -17,11 +17,8 @@ const ROOM_TTL_MS = 2 * 60 * 60 * 1000;
 const MAX_QUESTIONS = 100;
 const MAX_NAME = 16;
 
-const SCORES = {
-  first: { correct: 10, wrong: -20 },
-  later: { correct: 7, wrong: -14 },
-  wheel: { correct: 5, wrong: -5 },
-};
+const SCORE_CORRECT = 10;
+const SCORE_WRONG = -10;
 
 const app = express();
 const server = http.createServer(app);
@@ -206,26 +203,17 @@ function reply(socket, ack, payload) {
 
 /* ------------------------------ scoring logic ------------------------------ */
 
-function applyScore(room, playerId, mode, correct) {
-  let points;
-  if (mode === 'wheel') {
-    points = correct ? SCORES.wheel.correct : SCORES.wheel.wrong;
-  } else {
-    const idx = room.buzzOrder.indexOf(playerId);
-    const tier = idx === 0 ? SCORES.first : SCORES.later;
-    points = correct ? tier.correct : tier.wrong;
-  }
+function applyScore(room, playerId, correct) {
+  const points = correct ? SCORE_CORRECT : SCORE_WRONG;
   const player = findPlayer(room, playerId);
   if (player) player.score += points;
-  room.deltas[playerId] = (room.deltas[playerId] || 0) + points;
+  room.deltas[playerId] = points;
   room.lastResult = {
     playerId,
     playerName: player ? player.name : '',
-    mode,
     correct,
     points,
   };
-  return points;
 }
 
 /* -------------------------------- socket.io -------------------------------- */
@@ -398,7 +386,7 @@ io.on('connection', (socket) => {
     const player = findPlayer(room, room.answererId);
     if (!player) return reply(socket, ack, { ok: false });
     const mode = room.answerMode;
-    applyScore(room, player.id, mode, correct);
+    applyScore(room, player.id, correct);
 
     if (correct) {
       room.phase = 'reveal';

@@ -185,7 +185,7 @@ async function main() {
     s.deltas
   );
 
-  /* ---------- الجولة ٢: خطأ -20 ثم خطأ -14 ثم صحيحة +7 ---------- */
+  /* ---------- الجولة ٢: خطأ -10 ثم خطأ -10 ثم صحيحة +10 ---------- */
 
   await emit(host, 'host:next');
   await waitState(() => hostState, (s) => s.phase === 'question' && s.qIndex === 1);
@@ -195,8 +195,8 @@ async function main() {
   await emit(host, 'host:evaluate', { correct: false });
   s = await waitState(() => hostState, (s) => s.phase === 'question');
   check(
-    'إجابة خاطئة (أول ضغطة) → -20 مع قفل اللاعب',
-    s.players.find((p) => p.id === players[1].id).score === -20 &&
+    'إجابة خاطئة (أول ضغطة) → -10 مع قفل اللاعب',
+    s.players.find((p) => p.id === players[1].id).score === -10 &&
       s.players.find((p) => p.id === players[1].id).locked === true
   );
   const lockedBuzz = await emit(players[1].sock, 'player:buzz');
@@ -206,18 +206,18 @@ async function main() {
   await waitState(() => hostState, (s) => s.phase === 'answering' && s.answererId === players[2].id);
   await emit(host, 'host:evaluate', { correct: false });
   s = await waitState(() => hostState, (s) => s.phase === 'question');
-  check('إجابة خاطئة (ضغطة ثانية) → -14', s.players.find((p) => p.id === players[2].id).score === -14);
+  check('إجابة خاطئة (ضغطة ثانية) → -10', s.players.find((p) => p.id === players[2].id).score === -10);
 
   await emit(players[0].sock, 'player:buzz');
   await waitState(() => hostState, (s) => s.phase === 'answering' && s.answererId === players[0].id);
   await emit(host, 'host:evaluate', { correct: true });
   s = await waitState(() => hostState, (s) => s.phase === 'reveal');
   check(
-    'إجابة صحيحة (ضغطة ثانية) → +7 والمجموع 17',
-    s.players.find((p) => p.id === players[0].id).score === 17
+    'إجابة صحيحة (ضغطة ثانية) → +10 والمجموع 20',
+    s.players.find((p) => p.id === players[0].id).score === 20
   );
 
-  /* ---------- الجولة ٣: عجلة الحظ → +5 ---------- */
+  /* ---------- الجولة ٣: عجلة الحظ → +10 ---------- */
 
   await emit(host, 'host:next');
   await waitState(() => hostState, (s) => s.phase === 'question' && s.qIndex === 2);
@@ -233,10 +233,10 @@ async function main() {
   );
   check('اختتام العجلة يحوّل الدور للاعب المختار', w2.answererId === winnerId);
   const before =
-    winnerId === players[0].id ? 17 : winnerId === players[1].id ? -20 : winnerId === players[2].id ? -14 : 0;
+    winnerId === players[0].id ? 20 : winnerId === players[1].id ? -10 : winnerId === players[2].id ? -10 : 0;
   await emit(host, 'host:evaluate', { correct: true });
   s = await waitState(() => hostState, (s) => s.phase === 'reveal');
-  check('إجابة صحيحة عبر العجلة → +5', s.players.find((p) => p.id === winnerId).score === before + 5);
+  check('إجابة صحيحة عبر العجلة → +10', s.players.find((p) => p.id === winnerId).score === before + 10);
 
   /* ---------- الجولة ٤: لا أحد يعرف → لا نقاط ---------- */
 
@@ -253,7 +253,7 @@ async function main() {
   check('انتهاء كل الأسئلة → النتائج النهائية', s.phase === 'ended');
 
   const top = [...s.players].sort((a, b) => b.score - a.score)[0];
-  const expectedTop = 17 + (winnerId === players[0].id ? 5 : 0);
+  const expectedTop = 20 + (winnerId === players[0].id ? 10 : 0);
   check('المتصدر هو اللاعب صاحب أعلى نقاط', top.id === players[0].id && top.score === expectedTop, top);
 
   await emit(host, 'host:restart');

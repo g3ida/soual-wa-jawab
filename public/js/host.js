@@ -418,7 +418,7 @@
   function answeringPhaseHTML() {
     const p = state.players.find((x) => x.id === state.answererId);
     if (!p) return questionPhaseHTML();
-    const pts = SJ.potentialPoints(state, p.id, state.answerMode);
+    const pts = SJ.SCORE;
     const tier = SJ.buzzTierLabel(state, p.id, state.answerMode);
     return `
       ${questionCardHTML()}

@@ -33,12 +33,7 @@ window.SJ = (() => {
     );
   }
 
-  function potentialPoints(state, playerId, mode) {
-    if (mode === 'wheel') return { correct: 5, wrong: -5 };
-    const idx = (state.buzzOrder || []).indexOf(playerId);
-    if (idx === 0) return { correct: 10, wrong: -20 };
-    return { correct: 7, wrong: -14 };
-  }
+  const SCORE = { correct: 10, wrong: -10 };
 
   function buzzTierLabel(state, playerId, mode) {
     if (mode === 'wheel') return 'اختيار العجلة';
@@ -154,7 +149,7 @@ window.SJ = (() => {
     esc,
     avatarLetter,
     sortedPlayers,
-    potentialPoints,
+    SCORE,
     buzzTierLabel,
     toast,
     vibrate,
