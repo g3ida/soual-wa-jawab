@@ -9,7 +9,7 @@ const QRCode = require('qrcode');
 const { Server } = require('socket.io');
 
 const PORT = Number(process.env.PORT) || 3000;
-const MAX_PLAYERS = 6;
+const MAX_PLAYERS = 10;
 const CODE_LETTERS = 'ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 const CODE_RE = /^[A-Z0-9]{4}$/;
 const WHEEL_MS = 4600;

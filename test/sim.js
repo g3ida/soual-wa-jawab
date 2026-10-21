@@ -117,7 +117,7 @@ async function main() {
   check('GET /api/qr → صورة PNG', qr.status === 200 && qr.type.includes('image/png'));
 
   const players = [];
-  for (let i = 1; i <= 5; i++) {
+  for (let i = 1; i <= 9; i++) {
     const s = connect();
     const res = await emit(s, 'player:join', { code, name: `لاعب ${i}` });
     check(`انضمام اللاعب ${i}`, res.ok, res);
@@ -129,14 +129,14 @@ async function main() {
   check('رفض الاسم المكرر', dupRes.error === 'NAME_TAKEN', dupRes);
   dup.disconnect();
 
-  const s6 = connect();
-  const res6 = await emit(s6, 'player:join', { code, name: 'لاعب 6' });
-  check('انضمام اللاعب 6', res6.ok, res6);
-  players.push({ sock: s6, id: res6.playerId, token: res6.token, name: 'لاعب 6' });
+  const s10 = connect();
+  const res10 = await emit(s10, 'player:join', { code, name: 'لاعب 10' });
+  check('انضمام اللاعب 10', res10.ok, res10);
+  players.push({ sock: s10, id: res10.playerId, token: res10.token, name: 'لاعب 10' });
 
   const extra = connect();
   const extraRes = await emit(extra, 'player:join', { code, name: 'لاعب زائد' });
-  check('رفض اللاعب السابع (الحد الأقصى ٦)', extraRes.error === 'ROOM_FULL', extraRes);
+  check('رفض اللاعب الحادي عشر (الحد الأقصى ١٠)', extraRes.error === 'ROOM_FULL', extraRes);
   extra.disconnect();
 
   /* ---------- الإزالة من اللوبي ---------- */
@@ -147,7 +147,7 @@ async function main() {
   });
   const kickRes = await emit(host, 'host:kick', { playerId: players[5].id });
   check('المشرف يستطيع إزالة لاعب في اللوبي', kickRes.ok, kickRes);
-  await waitState(() => hostState, (s) => s.players.length === 5);
+  await waitState(() => hostState, (s) => s.players.length === 9);
   check('اللاعب المُزال يبقى خارج القائمة', true);
   await sleep(400);
   check('اللاعب المُزال يستلم إشعار الإخراج', gotKicked);
@@ -159,7 +159,7 @@ async function main() {
   const rejoinRes = await emit(rejoin, 'player:join', { code, name: 'لاعب 6', token: players[5].token });
   check('إعادة الانضمام بعد الإزالة تعمل', rejoinRes.ok, rejoinRes);
   players[5] = { sock: rejoin, id: rejoinRes.playerId, token: rejoinRes.token, name: 'لاعب 6' };
-  await waitState(() => hostState, (s) => s.players.length === 6);
+  await waitState(() => hostState, (s) => s.players.length === 10);
 
   const add = await emit(host, 'host:addQuestions', { texts: ['سؤال أول', 'سؤال ثاني', 'سؤال ثالث', 'سؤال رابع'] });
   check('إضافة ٤ أسئلة', add.ok && add.total === 4, add);
@@ -258,7 +258,7 @@ async function main() {
 
   await emit(host, 'host:restart');
   s = await waitState(() => hostState, (s) => s.phase === 'lobby');
-  check('إعادة اللعب تصفّر النقاط وتعيد اللاعبين', s.players.length === 6 && s.players.every((p) => p.score === 0));
+  check('إعادة اللعب تصفّر النقاط وتعيد اللاعبين', s.players.length === 10 && s.players.every((p) => p.score === 0));
 
   /* ---------- إعادة الاتصال أثناء اللعب ---------- */
 

@@ -1,7 +1,7 @@
 {
   "name": "سؤال وجواب",
   "short_name": "سؤال وجواب",
-  "description": "لعبة مسابقات جماعية: مشرف واحد وحتى ٦ لاعبين",
+  "description": "لعبة مسابقات جماعية: مشرف واحد وحتى ١٠ لاعبين",
   "start_url": "/",
   "display": "standalone",
   "orientation": "portrait",

@@ -3,7 +3,18 @@
 /* ------------------------------ أدوات مشتركة ------------------------------ */
 
 window.SJ = (() => {
-  const PALETTE = ['#6d5dfc', '#39d2ff', '#2ecc71', '#ffc94d', '#ff6b6b', '#c86bff'];
+  const PALETTE = [
+    '#6d5dfc',
+    '#39d2ff',
+    '#2ecc71',
+    '#ffc94d',
+    '#ff6b6b',
+    '#c86bff',
+    '#ff9f43',
+    '#4dd6b8',
+    '#f472b6',
+    '#a3e635',
+  ];
 
   const $ = (sel, el = document) => el.querySelector(sel);
 
